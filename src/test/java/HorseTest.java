@@ -5,11 +5,11 @@ import org.junit.jupiter.params.provider.ValueSource;
 import static org.junit.jupiter.api.Assertions.*;
 
 class HorseTest {
-    private String testName = "testName";
-    private Double testSpeed = 1.0;
-    private Double testDistance = 2.0;
-    private Horse horseWithTwoParameters = new Horse(testName, testSpeed);
-    private Horse horseWithThreeParameters = new Horse(testName, testSpeed, testDistance);
+    private final String testName = "testName";
+    private final Double testSpeed = 1.0;
+    private final Double testDistance = 2.0;
+    private final Horse horseWithTwoParameters = new Horse(testName, testSpeed);
+    private final Horse horseWithThreeParameters = new Horse(testName, testSpeed, testDistance);
     @Test
     void constructorIfFirstParameterNullShouldThrowException() {
         System.out.println("Test: constructorIfFirstParameterNullShouldThrowException");
@@ -25,10 +25,62 @@ class HorseTest {
                 result.equals(expected) ? "passed": "failed");
     }
     @ParameterizedTest
-    @ValueSource(chars = {' ', '\t'})
-    void constructorIfFirstParameterEmptyOrSpaceShouldThrowException() {
-        String result;
+    @ValueSource(strings = {""," ","\t","\n"})
+    void constructorIfFirstParameterEmptyOrSpaceShouldThrowException(String testString) {
+        System.out.print("Test: constructorIfFirstParameterEmptyOrSpaceShouldThrowException ");
 
+        Object result = assertThrows(IllegalArgumentException.class, ()-> new Horse(testString,testSpeed, testDistance)).
+                        getClass();
+        System.out.println(result.equals(IllegalArgumentException.class) ? "passed" : "failed");
+    }
+
+    @ParameterizedTest
+    @ValueSource(strings = {""," ","\t","\n"})
+    void constructorIfFirstParameterEmptyOrSpaceShouldThrowExceptionAndGetMessage(String testString) {
+        System.out.print("Test: constructorIfFirstParameterEmptyOrSpaceShouldThrowExceptionAndGetMessage ");
+        String expect = "Name cannot be blank.";
+        String result =
+                assertThrows(IllegalArgumentException.class, ()-> new Horse(testString,testSpeed, testDistance)).
+                        getMessage();
+        System.out.println(expect.equals(result) ? "passed" : "failed");
+    }
+
+    @Test
+    void constructorIfSecondParameterIsNegativeShouldThrowException() {
+        System.out.print("Test: constructorIfSecondParameterIsNegativeShouldThrowException ");
+        Object result =
+                assertThrows(IllegalArgumentException.class, ()-> new Horse(testName, -1.0, testDistance)).
+                        getClass();
+        System.out.println(result.equals(IllegalArgumentException.class) ? "passed" : "failed");
+    }
+
+    @Test
+    void constructorIfSecondParameterIsNegativeShouldThrowExceptionAndGetMessage() {
+        System.out.print("Test: constructorIfSecondParameterIsNegativeShouldThrowExceptionAndGetMessage ");
+        String result =
+                assertThrows(IllegalArgumentException.class, ()-> new Horse(testName, -1.0, testDistance)).
+                        getMessage();
+        String expect = "Speed cannot be negative.";
+        System.out.println(expect.equals(result) ? "passed" : "failed");
+    }
+
+    @Test
+    void constructorIfThirdParameterIsNegativeShouldThrowException() {
+        System.out.print("Test: constructorIfThirdParameterIsNegativeShouldThrowException ");
+        Object result =
+                assertThrows(IllegalArgumentException.class, ()-> new Horse(testName, testSpeed, -1.0)).
+                        getClass();
+        System.out.println(result.equals(IllegalArgumentException.class) ? "passed" : "failed");
+    }
+
+    @Test
+    void constructorIfThirdParameterIsNegativeShouldThrowExceptionAndGetMessage() {
+        System.out.print("Test: constructorIfThirdParameterIsNegativeShouldThrowExceptionAndGetMessage ");
+        String result =
+                assertThrows(IllegalArgumentException.class, ()-> new Horse(testName, testSpeed, -1.0)).
+                        getMessage();
+        String expect = "Distance cannot be negative.";
+        System.out.println(expect.equals(result) ? "passed" : "failed");
     }
 
     @Test
