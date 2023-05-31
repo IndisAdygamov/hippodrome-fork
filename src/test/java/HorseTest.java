@@ -1,8 +1,11 @@
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
+import org.mockito.MockedStatic;
+import org.mockito.Mockito;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.times;
 
 class HorseTest {
     private final String testName = "testName";
@@ -114,8 +117,26 @@ class HorseTest {
     }
 
     @Test
-    void move() {
+    void moveCheckCallInternalMethodGetRandomDoubleWithTwoParameters() {
+        try (MockedStatic<Horse> horseMockedStatic = Mockito.mockStatic(Horse.class)) {
+            horseWithTwoParameters.move();
+            horseMockedStatic.verify(() ->
+                    Horse.getRandomDouble(Mockito.anyDouble(), Mockito.anyDouble()), times(1));
+        }
+    }
 
+    @ParameterizedTest
+    @ValueSource(doubles = {0.3, 0.4, 0.5})
+    void moveCheckWhatMethodAssignValueToDistance(double result) {
+        Horse horse = new Horse("testHorse1", testSpeed, testDistance);
 
+        try (MockedStatic<Horse> horseMockedStatic = Mockito.mockStatic(Horse.class)) {
+            horseMockedStatic.when(() -> Horse.getRandomDouble(0.2, 0.9)).thenReturn(result);
+            double expected = testDistance + testSpeed * result;
+            horse.move();
+            assertEquals(expected, horse.getDistance());
+            System.out.printf("Test: moveCheckWhatMethodAssignValueToDistance %s\n",
+                    expected == horse.getDistance() ? "passed" : "failed");
+        }
     }
 }
