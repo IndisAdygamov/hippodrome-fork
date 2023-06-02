@@ -1,8 +1,13 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class Main {
-
+    private static final Logger log = LogManager.getLogger(Main.class);
     public static void main(String[] args) throws Exception {
         List<Horse> horses = List.of(
                 new Horse("Буцефал", 2.4),
@@ -15,13 +20,23 @@ public class Main {
         );
         Hippodrome hippodrome = new Hippodrome(horses);
 
+        log.trace("{} INFO Main: Начало скачек. Количество участников: {}",
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss,SSS")),
+                hippodrome.getHorses().size()
+        );
+
         for (int i = 0; i < 100; i++) {
             hippodrome.move();
             watch(hippodrome);
-            TimeUnit.MILLISECONDS.sleep(200);
+            TimeUnit.MILLISECONDS.sleep(2);
         }
 
         String winnerName = hippodrome.getWinner().getName();
+        log.info("Окончание скачек.");
+        log.error("{} Окончание скачек. Победитель: {}",
+                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss,SSS")),
+                winnerName
+                );
         System.out.println("Победил " + winnerName + "!");
     }
 
