@@ -1,8 +1,6 @@
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
@@ -20,8 +18,7 @@ public class Main {
         );
         Hippodrome hippodrome = new Hippodrome(horses);
 
-        log.trace("{} INFO Main: Начало скачек. Количество участников: {}",
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss,SSS")),
+        log.info("Начало скачек. Количество участников: {}",
                 hippodrome.getHorses().size()
         );
 
@@ -32,9 +29,7 @@ public class Main {
         }
 
         String winnerName = hippodrome.getWinner().getName();
-        log.info("Окончание скачек.");
-        log.error("{} Окончание скачек. Победитель: {}",
-                LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss,SSS")),
+        log.info("Окончание скачек. Победитель: {}",
                 winnerName
                 );
         System.out.println("Победил " + winnerName + "!");
