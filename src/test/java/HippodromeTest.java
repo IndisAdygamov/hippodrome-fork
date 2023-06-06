@@ -56,14 +56,17 @@ class HippodromeTest {
         System.out.println("Test: moveCheckCallOnAllHorses");
 
         List<Horse> listHorses = new ArrayList<>();
-        Horse horseMock = Mockito.mock(Horse.class);
+        Horse horseMock = null;
         for (int i = 0; i < 50; i++) {
+            horseMock = Mockito.mock(Horse.class);
             listHorses.add(horseMock);
         }
         Hippodrome hippodrome = new Hippodrome(listHorses);
-
         hippodrome.move();
-        Mockito.verify(horseMock, Mockito.times(50)).move();
+
+        for(Horse horse : listHorses) {
+            Mockito.verify(horse).move();
+        }
     }
 
     @Test
